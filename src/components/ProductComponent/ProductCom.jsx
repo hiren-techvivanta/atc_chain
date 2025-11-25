@@ -23,6 +23,7 @@ import { CustomHeading } from "../common/CustomHeading";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { LuDot } from "react-icons/lu";
 import Loader from "../common/Loader";
+import CateComponent2 from "../Home_Components/modulerSolution/CateComponent2";
 
 const theme = createTheme({
   components: {
@@ -100,7 +101,7 @@ const ProductCom = () => {
   const [selectedCategory, setSelectedCategory] = useState("Bearing");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
-  const [viewMode, setViewMode] = useState("categories");
+  const [viewMode, setViewMode] = useState("first");
   const [expandedPanel, setExpandedPanel] = useState(false);
 
   // const [expandedPanel, setExpandedPanel] = useState("panel1");
@@ -421,11 +422,26 @@ const ProductCom = () => {
   }, []);
 
   useEffect(() => {
-    if (!isInitialLoadRef.current || categories.length === 0) return;
-
     const categoryParam = searchParams.get("category");
     const subcategoryParam = searchParams.get("subcategory");
     const productParam = searchParams.get("product");
+
+    const urlFilters = {
+      category: categoryParam ? parseInt(categoryParam) : null,
+      subcategory: subcategoryParam ? parseInt(subcategoryParam) : null,
+      product: productParam ? parseInt(productParam) : null,
+    };
+
+    const hasAnyParam =
+      urlFilters.category || urlFilters.subcategory || urlFilters.product;
+
+    // Block API + selection logic ONLY if viewMode is 'first' and NO params
+    if (viewMode === "first" && !hasAnyParam) {
+      // Do not fetch subcategories or products!
+      return;
+    }
+
+    if (!isInitialLoadRef.current || categories.length === 0) return;
 
     const currentUrlParams = `${categoryParam || ""}-${
       subcategoryParam || ""
@@ -440,29 +456,22 @@ const ProductCom = () => {
 
     lastUrlParamsRef.current = currentUrlParams;
 
-    const urlFilters = {
-      category: categoryParam ? parseInt(categoryParam) : null,
-      subcategory: subcategoryParam ? parseInt(subcategoryParam) : null,
-      product: productParam ? parseInt(productParam) : null,
-    };
-
-    if (urlFilters.category || urlFilters.subcategory || urlFilters.product) {
+    if (hasAnyParam) {
       hasProcessedUrlRef.current = true;
       applyUrlFilters(urlFilters);
     } else if (categories.length > 0 && !hasProcessedUrlRef.current) {
       const firstCategory = categories[0];
       if (firstCategory?.id) {
-        setSelectedCategory(firstCategory.category || firstCategory.title);
-        setParentCategory(firstCategory.category || firstCategory.title);
-        setExpandedPanel(`panel1`);
-        setSelectedSubcategoryId(null);
-        setSelectedProductId(null);
-        fetchSubcategoriesAndDirectProducts(firstCategory.id);
-        updateUrlParams({ category: firstCategory.id });
-        hasProcessedUrlRef.current = true;
+        // setSelectedCategory(firstCategory.category || firstCategory.title);
+        // setParentCategory(firstCategory.category || firstCategory.title);
+        // setExpandedPanel(`panel1`);
+        // setSelectedSubcategoryId(null);
+        // setSelectedProductId(null);
+        // fetchSubcategoriesAndDirectProducts(firstCategory.id);
+        // hasProcessedUrlRef.current = true;
       }
     }
-  }, [categories, searchParams]);
+  }, [categories, searchParams, viewMode]);
 
   const updateUrlParams = (params) => {
     const newSearchParams = new URLSearchParams();
@@ -545,6 +554,7 @@ const ProductCom = () => {
             apiData: product,
             isDirectProduct: true,
             displayOrder: product.displayOrder,
+            cover_image: product.cover_image,
           }))
           .sort((a, b) => a.displayOrder - b.displayOrder);
       }
@@ -749,6 +759,13 @@ const ProductCom = () => {
         fetchSubcategoriesAndDirectProducts(category.id);
         updateUrlParams({ category: category.id });
       }
+    } else {
+      // Accordion closed: show CateComponent2
+      setViewMode("first"); // triggers CateComponent2 to render
+      setSelectedCategory(null);
+      setSelectedCategoryId(null);
+      setSelectedSubcategoryId(null);
+      setSelectedProductId(null);
     }
   };
 
@@ -887,6 +904,7 @@ const ProductCom = () => {
             subcategoryId: product.subcategory_id,
             displayOrder: product.displayOrder || product.display_order || 999,
             apiData: product,
+            cover_image: product.cover_image,
           }))
           .sort((a, b) => {
             if (a.displayOrder == null && b.displayOrder == null) return 0;
@@ -994,7 +1012,18 @@ const ProductCom = () => {
           setProductsLoading(false);
         }
       } else {
-        setProducts([]);
+        // Subcategory accordion is closed - reset to category default view
+        setSelectedSubcategoryId(null);
+        setSelectedProductId(null);
+        setViewMode("categories");
+        setShowDetails(false);
+        // Load category subcategories + direct products
+        const categoryId = subCategory?.categoryId;
+        if (categoryId) {
+          await fetchSubcategoriesAndDirectProducts(categoryId);
+        } else {
+          setProducts([]);
+        }
       }
     };
 
@@ -1163,7 +1192,8 @@ const ProductCom = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7 }}
-                  className="w-full md:w-full lg:w-5/12 xl:w-4/12 custom-width max-h-[99vh] overflow-y-auto overflow-x-hidden"
+                  ref={leftPanelRef}
+                  className="w-full md:w-full lg:w-5/12 xl:w-4/12 custom-width max-h-[87vh] overflow-y-auto overflow-x-hidden"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-5">
                     <h1 className="text-[36px] font-[700] text-[#BABEC8]">
@@ -1714,8 +1744,13 @@ const ProductCom = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8 }}
                   ref={rightPanelRef}
-                  className="w-full md:w-full lg:w-7/12 xl:w-8/12 custom-width2 max-h-[99vh] overflow-auto"
+                  className="w-full md:w-full lg:w-7/12 xl:w-8/12 custom-width2 max-h-[87vh] overflow-auto  "
                 >
+                  {viewMode === "first" && (
+                    <div>
+                      <CateComponent2 />
+                    </div>
+                  )}
                   {viewMode === "categories" && (
                     <div>
                       {subcategories.length > 0 && (
@@ -1774,7 +1809,7 @@ const ProductCom = () => {
                                           product.image.includes("/")
                                         ? `${
                                             import.meta.env.VITE_BACKEND_URL
-                                          }/${product.image}`
+                                          }/${product.cover_image}`
                                         : productImage
                                     }
                                     alt={product.title}
@@ -1863,7 +1898,7 @@ const ProductCom = () => {
                                       : product.image &&
                                         product.image.includes("/")
                                       ? `${import.meta.env.VITE_BACKEND_URL}/${
-                                          product.image
+                                          product.cover_image
                                         }`
                                       : productImage
                                   }
