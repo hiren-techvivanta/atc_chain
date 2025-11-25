@@ -271,7 +271,7 @@ const ShowCase = () => {
           hover:scale-110 active:scale-95"
                 // onClick={() => navigate("/products")}
               >
-                <span className="absolute inset-0 rounded-full bg-orange-500/40 animate-[ripple_2.5s_linear_infinite]" />
+                <span clas  sName="absolute inset-0 rounded-full bg-orange-500/40 animate-[ripple_2.5s_linear_infinite]" />
                 <span className="absolute inset-0 rounded-full bg-orange-500/40 animate-[ripple_2.5s_linear_infinite] [animation-delay:1.25s]" />
                 <TiPlus className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 relative z-10" />
               </button>
