@@ -133,7 +133,7 @@ const ProductCom = () => {
   const rightPanelRef = useRef(null);
   const scrollTarget = useRef(0);
   const scrolling = useRef(false);
-  
+
   useEffect(() => {
     const leftElement = leftPanelRef.current;
     const rightElement = rightPanelRef.current;
@@ -1678,8 +1678,8 @@ const ProductCom = () => {
                         <div className="flex items-center">
                           <span
                             className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-                              // "text-[#2E437C] font-semibold bg-blue-50"
-                              "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                              "text-[#2E437C] font-semibold bg-blue-50"
+                              // "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                             }`}
                             onClick={() => {
                               navigate(

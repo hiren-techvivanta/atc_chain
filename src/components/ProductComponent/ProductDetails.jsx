@@ -555,6 +555,34 @@ const ProductDetails = ({ selectedProduct }) => {
     url: selectedProduct.url,
   };
 
+  console.log(selectedProduct.description);
+
+  function addDistClasses(html) {
+  return html
+    // For <h1> ... </h1>
+    .replace(/<h1(?![^>]*class=)/g, '<h1 class="dist-h1"')
+    .replace(/<h1([^>]*)class="([^"]*)"/g, '<h1$1class="dist-h1 $2"')
+    // For <h2>
+    .replace(/<h2(?![^>]*class=)/g, '<h2 class="dist-h2"')
+    .replace(/<h2([^>]*)class="([^"]*)"/g, '<h2$1class="dist-h2 $2"')
+    // For <h3>
+    .replace(/<h3(?![^>]*class=)/g, '<h3 class="dist-h3"')
+    .replace(/<h3([^>]*)class="([^"]*)"/g, '<h3$1class="dist-h3 $2"')
+    // For <p>
+    .replace(/<p(?![^>]*class=)/g, '<p class="dist-p"')
+    .replace(/<p([^>]*)class="([^"]*)"/g, '<p$1class="dist-p $2"')
+    // For <ul>
+    .replace(/<ul(?![^>]*class=)/g, '<ul class="dist-ul"')
+    .replace(/<ul([^>]*)class="([^"]*)"/g, '<ul$1class="dist-ul $2"')
+    // For <ol>
+    .replace(/<ol(?![^>]*class=)/g, '<ol class="dist-ol"')
+    .replace(/<ol([^>]*)class="([^"]*)"/g, '<ol$1class="dist-ol $2"')
+    // For <li>
+    .replace(/<li(?![^>]*class=)/g, '<li class="dist-li"')
+    .replace(/<li([^>]*)class="([^"]*)"/g, '<li$1class="dist-li $2"');
+}
+  
+
   return (
     <div className="w-full bg-white">
       {/* Breadcrumb Navigation */}
@@ -998,6 +1026,19 @@ const ProductDetails = ({ selectedProduct }) => {
               </div>
             )}
           </div>
+        </div>
+        <div>
+         {selectedProduct?.description && (
+            <div
+              className="text-base text-gray-600 leading-relaxed pt-5"
+              dangerouslySetInnerHTML={{ __html: addDistClasses(selectedProduct.description) }}
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.75",
+                color: "#4a5568",
+              }}
+            />
+          )}
         </div>
       </div>
 

@@ -292,3 +292,80 @@
   0%,70% {transform:translate(0)}
   100%  {transform:translate(200%)}
 }
+
+/* Headings */
+.dist-h1 {
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: #2E437C;
+  margin-top: 2.2rem;
+  margin-bottom: 1.3rem;
+  letter-spacing: -1px;
+}
+
+.dist-h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #223154;
+  margin-top: 2rem;
+  margin-bottom: 1.15rem;
+}
+
+.dist-h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #344968;
+  margin-top: 1.5rem;
+  margin-bottom: 0.9rem;
+}
+
+/* Paragraphs */
+.dist-p {
+  font-size: 1.03rem;
+  color: #495370;
+  margin: 0 0 1.2rem 0;
+  line-height: 1.75;
+}
+
+/* Lists */
+.dist-ul, .dist-ol {
+  padding-left: 2.1rem;
+  margin: 1.2rem 0;
+}
+
+.dist-li {
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+  color: #3e4858;
+  line-height: 1.6;
+}
+
+.dist-ul .dist-li::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2E437C;
+  margin-right: 14px;
+  position: relative;
+  top: 1px;
+}
+
+.dist-ol {
+  counter-reset: dist-counter;
+}
+
+.dist-ol .dist-li {
+  position: relative;
+  padding-left: 2.1rem;
+}
+
+.dist-ol .dist-li::before {
+  counter-increment: dist-counter;
+  content: counter(dist-counter) ".";
+  position: absolute;
+  left: 0;
+  color: #2E437C;
+  font-weight: bold;
+}
