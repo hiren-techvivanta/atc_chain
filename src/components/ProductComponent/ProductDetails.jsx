@@ -1028,7 +1028,8 @@ const ProductDetails = ({ selectedProduct }) => {
           </div>
         </div>
         <div>
-         {selectedProduct?.description && (
+        <div className="container px-5 max-w-[">
+           {selectedProduct?.description && (
             <div
               className="text-base text-gray-600 leading-relaxed pt-5"
               dangerouslySetInnerHTML={{ __html: addDistClasses(selectedProduct.description) }}
@@ -1039,6 +1040,7 @@ const ProductDetails = ({ selectedProduct }) => {
               }}
             />
           )}
+        </div>
         </div>
       </div>
 
