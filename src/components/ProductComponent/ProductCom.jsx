@@ -1095,10 +1095,6 @@ const ProductCom = () => {
     );
   }
 
-  useEffect(() => {
-    console.log(subCategoryName);
-  }, [subCategoryName]);
-
   return (
     <>
       {loading === true ? (
