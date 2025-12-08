@@ -1765,132 +1765,135 @@ const ProductCom = () => {
                   )}
                   {viewMode === "categories" && (
                     <div>
-                      {subcategories.filter((item) => item.is_active !== false)
-                        .length > 0 && (
-                        <div className="mb-8">
-                          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
-                            <h2 className="text-xl font-semibold text-[#BABEC8]">
-                              Subcategories
-                            </h2>
-                            <div className="hidden md:block flex-1 mx-6">
-                              <div className="h-[6px] bg-[#BABEC8]"></div>
-                            </div>
-                          </div>
-
-                          <SubcategoryCards
-                            subcategories={subcategories}
-                            onSubcategoryClick={handleSubcategoryCardClick}
-                            loading={subcategoriesLoading}
-                          />
+                      {subcategoriesLoading ? (
+                        <div className="w-full h-full min-h-[50vh] grid place-items-center">
+                          <div className="loader"></div>
                         </div>
-                      )}
-
-                      {directProducts.length > 0 && (
-                        <div>
-                          <div className="flex flex-col md:flex-row md:items-center md:justify-between pt-3 gap-6 mb-8">
-                            <h2 className="text-xl font-semibold text-[#BABEC8]">
-                              Products
-                            </h2>
-                            <div className="hidden md:block flex-1 mx-6">
-                              <div className="h-[6px] bg-[#BABEC8]"></div>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {directProducts.map((product, index) => (
-                              <motion.div
-                                key={product.id}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{
-                                  duration: 0.5,
-                                  delay: index * 0.1,
-                                }}
-                                onClick={() => {
-                                  handleDirectProductClick(product);
-                                  setSubCategoryName();
-                                  setdetailsShowing(true);
-                                }}
-                                className="flex flex-col items-start cursor-pointer p-4"
-                              >
-                                <div className="aspect-[3/3] max-w-[100%] w-full overflow-hidden">
-                                  <motion.img
-                                    src={
-                                      product.image &&
-                                      product.image.startsWith("http")
-                                        ? product.image
-                                        : product.image &&
-                                          product.image.includes("/")
-                                        ? `${
-                                            import.meta.env.VITE_BACKEND_URL
-                                          }/${product.cover_image}`
-                                        : productImage
-                                    }
-                                    alt={product.title}
-                                    className="max-w-[100%] w-full h-full object-cover p-3"
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ duration: 0.3 }}
-                                  />
-                                </div>
-                                <h2 className="text-[16px] font-[400] mt-3 text-gray-800">
-                                  {product.title}
+                      ) : (
+                        <>
+                          {subcategories.filter(
+                            (item) => item.is_active !== false
+                          ).length > 0 && (
+                            <div className="mb-8">
+                              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+                                <h2 className="text-xl font-semibold text-[#BABEC8]">
+                                  Subcategories
                                 </h2>
-                                <p className="text-gray-500 text-sm mt-1">
-                                  {product.category}
+                                <div className="hidden md:block flex-1 mx-6">
+                                  <div className="h-[6px] bg-[#BABEC8]"></div>
+                                </div>
+                              </div>
+
+                              <SubcategoryCards
+                                subcategories={subcategories}
+                                onSubcategoryClick={handleSubcategoryCardClick}
+                                loading={subcategoriesLoading}
+                              />
+                            </div>
+                          )}
+
+                          {directProducts.length > 0 && (
+                            <div>
+                              <div className="flex flex-col md:flex-row md:items-center md:justify-between pt-3 gap-6 mb-8">
+                                <h2 className="text-xl font-semibold text-[#BABEC8]">
+                                  Products
+                                </h2>
+                                <div className="hidden md:block flex-1 mx-6">
+                                  <div className="h-[6px] bg-[#BABEC8]"></div>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {directProducts.map((product, index) => (
+                                  <motion.div
+                                    key={product.id}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{
+                                      duration: 0.5,
+                                      delay: index * 0.1,
+                                    }}
+                                    onClick={() => {
+                                      handleDirectProductClick(product);
+                                      setSubCategoryName();
+                                      setdetailsShowing(true);
+                                    }}
+                                    className="flex flex-col items-start cursor-pointer p-4"
+                                  >
+                                    <div className="aspect-[3/3] max-w-[100%] w-full overflow-hidden">
+                                      <motion.img
+                                        src={
+                                          product.image &&
+                                          product.image.startsWith("http")
+                                            ? product.image
+                                            : product.image &&
+                                              product.image.includes("/")
+                                            ? `${
+                                                import.meta.env.VITE_BACKEND_URL
+                                              }/${product.cover_image}`
+                                            : productImage
+                                        }
+                                        alt={product.title}
+                                        className="max-w-[100%] w-full h-full object-cover p-3"
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.3 }}
+                                      />
+                                    </div>
+                                    <h2 className="text-[16px] font-[400] mt-3 text-gray-800">
+                                      {product.title}
+                                    </h2>
+                                    <p className="text-gray-500 text-sm mt-1">
+                                      {product.category}
+                                    </p>
+                                  </motion.div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {subcategories.length === 0 &&
+                            directProducts.length === 0 &&
+                            !subcategoriesLoading && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-center py-20"
+                              >
+                                <div className="text-gray-400 mb-4">
+                                  <svg
+                                    className="w-16 h-16 mx-auto"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={1}
+                                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                    />
+                                  </svg>
+                                </div>
+                                <h3 className="text-lg font-medium text-gray-600 mb-2">
+                                  No content available
+                                </h3>
+                                <p className="text-gray-400">
+                                  This category doesn't have any subcategories
+                                  or products available
                                 </p>
                               </motion.div>
-                            ))}
-                          </div>
-                        </div>
+                            )}
+                        </>
                       )}
-
-                      {subcategories.length === 0 &&
-                        directProducts.length === 0 &&
-                        !subcategoriesLoading && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-center py-20"
-                          >
-                            <div className="text-gray-400 mb-4">
-                              <svg
-                                className="w-16 h-16 mx-auto"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={1}
-                                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                />
-                              </svg>
-                            </div>
-                            <h3 className="text-lg font-medium text-gray-600 mb-2">
-                              No content available
-                            </h3>
-                            <p className="text-gray-400">
-                              This category doesn't have any subcategories or
-                              products available
-                            </p>
-                          </motion.div>
-                        )}
                     </div>
                   )}
 
                   {viewMode === "products" && (
                     <>
                       {productsLoading ? (
-                        <div className="text-center py-20">
-                          <CircularProgress
-                            size={40}
-                            sx={{ color: "#2E437C" }}
-                          />
-                          <p className="mt-4 text-gray-600">
-                            Loading products...
-                          </p>
+                        <div className="w-full h-full min-h-[50vh] grid place-items-center">
+                          <div className="loader"></div>
                         </div>
                       ) : products.length > 0 ? (
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -1975,14 +1978,8 @@ const ProductCom = () => {
                       transition={{ duration: 0.6 }}
                     >
                       {productDetailsLoading ? (
-                        <div className="flex items-center justify-center py-20">
-                          <CircularProgress
-                            size={60}
-                            sx={{ color: "#2E437C" }}
-                          />
-                          <p className="ml-4 text-gray-600">
-                            Loading product details...
-                          </p>
+                        <div className="w-full h-full min-h-[50vh] grid place-items-center">
+                          <div className="loader"></div>
                         </div>
                       ) : (
                         <ProductDetails selectedProduct={selectedProduct} />

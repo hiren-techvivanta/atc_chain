@@ -211,12 +211,21 @@ export default function Navbar({ navStyle, show = true }) {
                   ) : (
                     <motion.button
                       key={menu.name}
-                      onClick={() => navigate(menu.url)}
+                      onClick={() => {
+                        if (
+                          menu.url === "/products" &&
+                          window.location.pathname === "/products"
+                        ) {
+                          window.location.href = "/products";
+                        } else {
+                          navigate(menu.url);
+                        }
+                      }}
                       className={`${navBg ? "text-[#2E437C]" : "text-white"} 
                   transition-colors cursor-pointer font-medium hover:text-[#2E437C]`}
                       style={{
                         fontFamily: "'Articulat CF', sans-serif",
-                        fontSize: "16px", 
+                        fontSize: "16px",
                         fontWeight: 450,
                       }}
                     >
@@ -325,12 +334,22 @@ export default function Navbar({ navStyle, show = true }) {
                   {menuItems.map((menu, index) => (
                     <motion.button
                       key={menu.name}
-                      onClick={() => handleMobileMenuClick(menu.url)}
+                      onClick={() => {
+                        if (
+                          menu.url === "/products" &&
+                          window.location.pathname === "/products"
+                        ) {
+                          handleMobileMenuClick(menu.url); 
+                          window.location.href = "/products";
+                        } else {
+                          handleMobileMenuClick(menu.url);
+                        }
+                      }}
                       className={`py-4 px-4 rounded-lg text-lg text-left ${
                         navBg
-                          ? "text-[#2E437C] hover:bg-gray-100"
+                          ? "text-[#2E437C]"
                           : "text-white hover:bg-gray-800"
-                      } transition-colors font-medium`}
+                      } transition-colors font-medium ${navBg ? "hover:bg-gray-100" : ""}`}
                       style={{ fontFamily: "'Articulat CF', sans-serif" }}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
