@@ -585,14 +585,43 @@ const ProductCom = () => {
       setSelectedSubcategoryId(subcategory.id);
       setSelectedProductId(null);
       
-      // Expand the parent category accordion
-      const categoryIndex = categories.findIndex(c => c.id === subcategory.category_id);
-      if (categoryIndex !== -1) {
-        setExpandedPanel(`panel${categoryIndex + 1}`);
-        setSelectedCategory(categories[categoryIndex].title);
-        setParentCategory(categories[categoryIndex].title);
+      // Robust Reverse Lookup: Find which category contains this subcategory
+      let foundCategoryIndex = -1;
+      let foundSubIndex = -1;
+
+      for (let i = 0; i < categories.length; i++) {
+        const cat = categories[i];
+        if (cat.children) {
+          const subIdx = cat.children.findIndex(
+            child => child.isSubCategory && child.subcategoryId.toString() === subcategory.id.toString()
+          );
+          if (subIdx !== -1) {
+            foundCategoryIndex = i;
+            foundSubIndex = subIdx;
+            break; 
+          }
+        }
       }
 
+      if (foundCategoryIndex !== -1) {
+        setExpandedPanel(`panel${foundCategoryIndex + 1}`);
+        setSelectedCategory(categories[foundCategoryIndex].title);
+        setParentCategory(categories[foundCategoryIndex].title);
+
+        if (foundSubIndex !== -1) {
+             setExpandedSubPanel(`subpanel${foundSubIndex}`);
+        }
+      } else {
+         // Fallback if reverse lookup fails, try direct property
+          const categoryIndex = categories.findIndex(c => subcategory.category_id && c.id.toString() === subcategory.category_id.toString());
+          if (categoryIndex !== -1) {
+            setExpandedPanel(`panel${categoryIndex + 1}`);
+            setSelectedCategory(categories[categoryIndex].title);
+            setParentCategory(categories[categoryIndex].title);
+             // Try to find sub-accordion index here if needed, but reverse lookup usually catches it
+          }
+      }
+      
       const fetchedProducts = await searchProducts(
         "",
         subcategory.category_id,
