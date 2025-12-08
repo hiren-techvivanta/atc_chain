@@ -11,7 +11,6 @@ import {
   ListItemButton,
   ListItemText,
   Box,
-  CircularProgress,
   Alert,
 } from "@mui/material";
 import { FaChevronDown, FaArrowLeft, FaTimes } from "react-icons/fa";
@@ -585,6 +584,14 @@ const ProductCom = () => {
       setShowDetails(false);
       setSelectedSubcategoryId(subcategory.id);
       setSelectedProductId(null);
+      
+      // Expand the parent category accordion
+      const categoryIndex = categories.findIndex(c => c.id === subcategory.category_id);
+      if (categoryIndex !== -1) {
+        setExpandedPanel(`panel${categoryIndex + 1}`);
+        setSelectedCategory(categories[categoryIndex].title);
+        setParentCategory(categories[categoryIndex].title);
+      }
 
       const fetchedProducts = await searchProducts(
         "",
@@ -658,7 +665,8 @@ const ProductCom = () => {
       // Accordion closed: show CateComponent2
       setViewMode("first"); // triggers CateComponent2 to render
       setSelectedCategory(null);
-      setSelectedCategoryId(null);
+      setSearchParams({});
+
       setSelectedSubcategoryId(null);
       setSelectedProductId(null);
     }
@@ -1758,10 +1766,16 @@ const ProductCom = () => {
                         </>
                       )}
                   </div>
-                  {viewMode === "first" && (
+
+                  {viewMode === "first" && !searchParams.get("category") && (
                     <div className="flex items-center justify-around w-full h-[80vh]">
                       <CateComponent2 />
                     </div>
+                  )}
+                  {viewMode === "first" && searchParams.get("category") && (
+                     <div className="w-full h-full min-h-[50vh] grid place-items-center">
+                        <div className="loader"></div>
+                     </div>
                   )}
                   {viewMode === "categories" && (
                     <div>
