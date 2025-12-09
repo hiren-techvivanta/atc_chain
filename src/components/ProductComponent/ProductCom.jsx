@@ -484,7 +484,12 @@ const ProductCom = () => {
         setParentCategory(category.category || category.title);
         setExpandedPanel(`panel${categories.indexOf(category) + 1}`);
 
-        if (filters.product && viewMode === "first") {
+        const isFromMenu = searchParams.get("source") === "menu";
+        
+        // Allow navigation if we are in 'first' view OR if the navigation came from the menu
+        const shouldNavigate = viewMode === "first" || isFromMenu;
+
+        if (filters.product && shouldNavigate) {
           setSelectedProductId(filters.product);
           setSelectedSubcategoryId(filters.subcategory || null);
           await handleProductByUrl(
@@ -492,11 +497,11 @@ const ProductCom = () => {
             category,
             filters.subcategory
           );
-        } else if (filters.subcategory && viewMode === "first") {
+        } else if (filters.subcategory && shouldNavigate) {
           setSelectedSubcategoryId(filters.subcategory);
           setSelectedProductId(null);
           await handleSubcategoryByUrl(filters.subcategory, category);
-        } else if (filters.category && viewMode === "first") {
+        } else if (filters.category && shouldNavigate) {
           setSelectedSubcategoryId(null);
           setSelectedProductId(null);
           await fetchSubcategoriesAndDirectProducts(category.id);
@@ -525,13 +530,39 @@ const ProductCom = () => {
         setViewMode("details");
         setShowDetails(true);
 
-        if (subcategoryId || detailedProduct.subcategoryId) {
-          const searchResults = await searchProducts(
-            "",
-            category.id,
-            subcategoryId || detailedProduct.subcategoryId
-          );
-          setProducts(searchResults);
+        const targetSubcategoryId = subcategoryId || detailedProduct.subcategoryId;
+
+        if (targetSubcategoryId) {
+          // Check if we already have the correct products loaded to avoid double API call
+          const isCategoryMatch = cateId && category.id && cateId.toString() === category.id.toString();
+          const isSubcategoryMatch = subCateId && targetSubcategoryId && subCateId.toString() === targetSubcategoryId.toString();
+          
+          if (isCategoryMatch && isSubcategoryMatch && products.length > 0) {
+            // Data is already loaded, skip the search call
+            console.log("Skipping redundant product fetch");
+          } else {
+            const searchResults = await searchProducts(
+              "",
+              category.id,
+              targetSubcategoryId
+            );
+            setProducts(searchResults);
+          }
+          
+           // Fix Accordion Expansion Logic
+          if (category.children) {
+              const subIndex = category.children.findIndex(
+                  child => child.isSubCategory && child.subcategoryId.toString() === targetSubcategoryId.toString()
+              );
+              if (subIndex !== -1) {
+                  setExpandedSubPanel(`subpanel${subIndex}`);
+                  // Also ensure parent category name is set correctly
+                   const foundSub = category.children[subIndex];
+                   if (foundSub) {
+                       setSelectedCategory(foundSub.title);
+                   }
+              }
+          }
         }
       }
     } catch (error) {

@@ -206,6 +206,9 @@ const QuickSelectMenu = ({ navBg }) => {
       queryParams.set("product", item.id);
     }
 
+    // Add source flag so ProductCom knows this came from the menu
+    queryParams.set("source", "menu");
+
     navigate(`/products?${queryParams.toString()}`);
   };
 

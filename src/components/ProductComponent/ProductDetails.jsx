@@ -591,7 +591,7 @@ const ProductDetails = ({ selectedProduct }) => {
   return (
     <div className="w-full bg-white">
       {/* Breadcrumb Navigation */}
-      <div className="px-4 lg:px-0 mb-4 lg:mb-5">
+   { /*  <div className="px-4 lg:px-0 mb-4 lg:mb-5">
         <div className="flex items-center flex-wrap gap-2 text-sm">
           {breadcrumbItems.map((item, index) => (
             <div key={index} className="flex items-center">
@@ -611,7 +611,7 @@ const ProductDetails = ({ selectedProduct }) => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */ }
 
       <div className="max-w-7xl mx-auto lg:px-8 px-4">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-8 mb-5 lg:mb-5">
