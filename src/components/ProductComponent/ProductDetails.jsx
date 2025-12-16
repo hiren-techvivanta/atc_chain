@@ -252,9 +252,14 @@ const ProductDetails = ({ selectedProduct }) => {
     const items = [];
 
     const categoryName =
-      selectedProduct.category?.name || selectedProduct.apiData?.category?.name;
+      selectedProduct.category?.name ||
+      (typeof selectedProduct.category === "string" ? selectedProduct.category : null) ||
+      selectedProduct.apiData?.category?.name;
     const subcategoryName =
       selectedProduct.subcategory?.name ||
+      (typeof selectedProduct.subcategory === "string"
+        ? selectedProduct.subcategory
+        : null) ||
       selectedProduct.apiData?.subcategory?.name;
     const productName = selectedProduct.title || selectedProduct.productName;
 
@@ -591,27 +596,6 @@ const ProductDetails = ({ selectedProduct }) => {
   return (
     <div className="w-full bg-white">
       {/* Breadcrumb Navigation */}
-   { /*  <div className="px-4 lg:px-0 mb-4 lg:mb-5">
-        <div className="flex items-center flex-wrap gap-2 text-sm">
-          {breadcrumbItems.map((item, index) => (
-            <div key={index} className="flex items-center">
-              <span
-                className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-                  item.active
-                    ? "text-[#2E437C] font-semibold bg-blue-50"
-                    : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                }`}
-                onClick={item.onClick}
-              >
-                {item.name}
-              </span>
-              {index < breadcrumbItems.length - 1 && (
-                <HiChevronRight className="w-4 h-4 text-gray-400 mx-1" />
-              )}
-            </div>
-          ))}
-        </div>
-      </div> */ }
 
       <div className="max-w-7xl mx-auto lg:px-8 px-4">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-8 mb-5 lg:mb-5">
@@ -1102,7 +1086,7 @@ const ProductDetails = ({ selectedProduct }) => {
             <img
               src={images[fullscreenImageIndex]?.src}
               alt={images[fullscreenImageIndex]?.alt}
-              className="w-[500px] h-[auto] object-contain"
+              className="fullscreen-image h-[auto] object-contain"
             />
           </div>
 

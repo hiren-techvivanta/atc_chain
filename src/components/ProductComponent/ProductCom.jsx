@@ -746,8 +746,8 @@ const ProductCom = () => {
         response.data.message === "Product fetched successfully" &&
         response.data.data
       ) {
-        setCategoryName();
-        setSubCategoryName();
+        setCategoryName(response.data.data.category?.name);
+        setSubCategoryName(response.data.data.subcategory?.name);
         const detailedProduct = {
           id: response.data.data.id,
           title: response.data.data.productName,
