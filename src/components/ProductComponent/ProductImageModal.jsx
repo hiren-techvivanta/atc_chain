@@ -40,8 +40,8 @@ const ProductImageModal = ({
       const scaledWidth = iWidth * scale;
       const scaledHeight = iHeight * scale;
 
-      const xConstraint = scaledWidth > pWidth ? (scaledWidth - pWidth) / 2 : 0;
-      const yConstraint = scaledHeight > pHeight ? (scaledHeight - pHeight) / 2 : 0;
+      const xConstraint = (scaledWidth > pWidth ? (scaledWidth - pWidth) / 2 : 0) + (pWidth * 0.5);
+      const yConstraint = (scaledHeight > pHeight ? (scaledHeight - pHeight) / 2 : 0) + (pHeight * 0.5);
 
       setConstraints({
         top: -yConstraint,
@@ -120,8 +120,18 @@ const ProductImageModal = ({
 
         >
             
-          {/* Controls Container */}
-          <div className="absolute top-4 right-4 z-[60] flex items-center gap-3">
+          <div className="absolute top-4 right-4 z-[60]">
+            <button
+              onClick={onClose}
+              className="p-3 bg-black/50 hover:bg-black/70 rounded-full text-white transition-all duration-300 border border-white/10 shadow-lg"
+              title="Close"
+            >
+              <MdClose size={24} />
+            </button>
+          </div>
+            
+          {/* Controls Container - Bottom Center */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-4">
              {/* Zoom Controls */}
              <div className="flex items-center bg-black/50 rounded-full px-2 py-1 backdrop-blur-md border border-white/10 shadow-lg">
                 <button
@@ -153,15 +163,16 @@ const ProductImageModal = ({
                 </button>
              </div>
 
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="p-3 bg-black/50 hover:bg-black/70 rounded-full text-white transition-all duration-300 border border-white/10 shadow-lg"
-              title="Close"
-            >
-              <MdClose size={24} />
-            </button>
+             {/* Image Counter */}
+             <div className="bg-black/50 px-3 py-1 rounded-full border border-white/10">
+                <span className="text-white text-sm font-medium">
+                  {currentIndex + 1} / {images.length}
+                </span>
+             </div>
           </div>
+
+
+
 
           {/* Navigation Buttons */}
           {images.length > 1 && (
@@ -222,14 +233,7 @@ const ProductImageModal = ({
             />
           </div>
 
-          {/* Image Counter */}
-          {images.length > 1 && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-              <span className="text-white text-sm font-medium">
-                {currentIndex + 1} / {images.length}
-              </span>
-            </div>
-          )}
+
         </motion.div>
       )}
     </AnimatePresence>

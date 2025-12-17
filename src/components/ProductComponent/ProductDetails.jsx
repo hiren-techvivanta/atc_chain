@@ -45,10 +45,7 @@ import "swiper/css/pagination";
 import "swiper/css/thumbs";
 import { LuDownload } from "react-icons/lu";
 
-import pd1 from "../../assets/images/pd1.jpg";
-import pd2 from "../../assets/images/pd2.jpg";
-import pd3 from "../../assets/images/pd3.jpg";
-import pd4 from "../../assets/images/pd4.jpg";
+
 
 const ProductDetails = ({ selectedProduct }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -139,12 +136,7 @@ const ProductDetails = ({ selectedProduct }) => {
       }));
     }
 
-    return [
-      { id: 1, src: pd1, alt: "Product Image 1" },
-      { id: 2, src: pd2, alt: "Product Image 2" },
-      { id: 3, src: pd3, alt: "Product Image 3" },
-      { id: 4, src: pd4, alt: "Product Image 4" },
-    ];
+    return [];
   };
 
   const images = getImages();
@@ -264,9 +256,16 @@ const ProductDetails = ({ selectedProduct }) => {
       selectedProduct.apiData?.subcategory?.name;
     const productName = selectedProduct.title || selectedProduct.productName;
 
-    // Get current URL parameters for navigation
-    const currentCategory = searchParams.get("category");
-    const currentSubcategory = searchParams.get("subcategory");
+    // Extract IDs favoring product data, falling back to URL params
+    const categoryId = 
+      selectedProduct.categoryId || 
+      selectedProduct.apiData?.category?.id || 
+      searchParams.get("category");
+      
+    const subcategoryId = 
+      selectedProduct.subcategoryId || 
+      selectedProduct.apiData?.subcategory?.id || 
+      searchParams.get("subcategory");
 
     if (categoryName) {
       items.push({
@@ -274,9 +273,8 @@ const ProductDetails = ({ selectedProduct }) => {
         active: false,
         onClick: () => {
           const params = new URLSearchParams();
-          if (currentCategory) params.set("category", currentCategory);
+          if (categoryId) params.set("category", categoryId);
           navigate(`/products?${params.toString()}`);
-          window.location.reload();
         },
       });
     }
@@ -287,10 +285,9 @@ const ProductDetails = ({ selectedProduct }) => {
         active: false,
         onClick: () => {
           const params = new URLSearchParams();
-          if (currentCategory) params.set("category", currentCategory);
-          if (currentSubcategory) params.set("subcategory", currentSubcategory);
+          if (categoryId) params.set("category", categoryId);
+          if (subcategoryId) params.set("subcategory", subcategoryId);
           navigate(`/products?${params.toString()}`);
-          window.location.reload();
         },
       });
     }

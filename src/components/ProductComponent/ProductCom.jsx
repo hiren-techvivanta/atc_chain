@@ -486,8 +486,8 @@ const ProductCom = () => {
 
         const isFromMenu = searchParams.get("source") === "menu";
         
-        // Allow navigation if we are in 'first' view OR if the navigation came from the menu
-        const shouldNavigate = viewMode === "first" || isFromMenu;
+        // Allow navigation if we are in 'first' view, 'products' view, 'details' view, or if the navigation came from the menu
+        const shouldNavigate = viewMode === "first" || viewMode === "products" || viewMode === "details" || isFromMenu;
 
         if (filters.product && shouldNavigate) {
           setSelectedProductId(filters.product);
@@ -498,16 +498,27 @@ const ProductCom = () => {
             filters.subcategory
           );
         } else if (filters.subcategory && shouldNavigate) {
+          // Immediate UI update to prevent stale view
+          setProductsLoading(true); // Show loader immediately
           setSelectedSubcategoryId(filters.subcategory);
           setSelectedProductId(null);
+          setSelectedProduct(null);
+          setViewMode("products");
+          setShowDetails(false);
+          setProducts([]); 
+          
           await handleSubcategoryByUrl(filters.subcategory, category);
         } else if (filters.category && shouldNavigate) {
+          // Immediate UI update
+          setSubcategoriesLoading(true); // Show loader immediately
           setSelectedSubcategoryId(null);
           setSelectedProductId(null);
-          await fetchSubcategoriesAndDirectProducts(category.id);
+          setSelectedProduct(null);
           setViewMode("categories");
           setShowDetails(false);
           setProducts([]);
+          
+          await fetchSubcategoriesAndDirectProducts(category.id);
         }
       }
     } catch (error) {
