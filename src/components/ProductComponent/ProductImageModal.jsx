@@ -12,6 +12,48 @@ const ProductImageModal = ({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [scale, setScale] = useState(1);
 
+  const [constraints, setConstraints] = useState({ top: 0, left: 0, right: 0, bottom: 0 });
+  const containerRef = useRef(null);
+  const imageRef = useRef(null);
+
+  // Calculate constraints
+  useEffect(() => {
+    if (scale > 1 && containerRef.current && imageRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const imageRect = imageRef.current.getBoundingClientRect();
+
+      // We need the unscaled dimensions of the image in the DOM
+      // But getBoundingClientRect gives scaled if transform is applied.
+      // However, framer motion handles dragConstraints on the element's layout projection usually.
+      // A safer way for manual calculation:
+      // The amount we can drag X is (ScaledWidth - ContainerWidth) / 2
+      
+      // If we use the raw values from DOM, they include the scale transform if active.
+      // Let's assume the image is centered.
+      
+      const pWidth = containerRect.width;
+      const pHeight = containerRect.height;
+      // Get natural dimensions rendered (approximate from rect / scale)
+      const iWidth = imageRect.width / scale; // unscaled width
+      const iHeight = imageRect.height / scale;
+
+      const scaledWidth = iWidth * scale;
+      const scaledHeight = iHeight * scale;
+
+      const xConstraint = scaledWidth > pWidth ? (scaledWidth - pWidth) / 2 : 0;
+      const yConstraint = scaledHeight > pHeight ? (scaledHeight - pHeight) / 2 : 0;
+
+      setConstraints({
+        top: -yConstraint,
+        bottom: yConstraint,
+        left: -xConstraint,
+        right: xConstraint,
+      });
+    } else {
+      setConstraints({ top: 0, left: 0, right: 0, bottom: 0 });
+    }
+  }, [scale, currentIndex]);
+
 
   // Sync internal state with props
   useEffect(() => {
@@ -75,7 +117,7 @@ const ProductImageModal = ({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm"
-          onClick={onClose} // Close on backdrop click
+
         >
             
           {/* Controls Container */}
@@ -141,12 +183,14 @@ const ProductImageModal = ({
 
           <div 
              className="relative w-full h-full flex items-center justify-center overflow-hidden" 
+             ref={containerRef}
             onWheel={(e) => {
                  // Simple scroll zoom
                  e.stopPropagation();
             }}
           >
             <motion.img
+              ref={imageRef}
               key={currentIndex} // Re-render motion element on image change
               src={images[currentIndex]?.src}
               alt={images[currentIndex]?.alt}
@@ -161,7 +205,8 @@ const ProductImageModal = ({
                 y: scale === 1 ? 0 : undefined 
               }}
               drag={scale > 1}
-              dragElastic={0.1}
+              dragConstraints={constraints}
+              dragElastic={0.7}
               dragMomentum={true}
               
               // Smooth transitions for scale changes

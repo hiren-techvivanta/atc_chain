@@ -157,7 +157,7 @@ export default function CateComponent2() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={cardGridVariants}
-            className="grid grid-cols-2 custom-gap sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-6 w-full h-[35rem]"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 md:gap-6 w-full h-auto min-h-[50vh] pb-10"
           >
             {solutions.map((item, idx) => (
               <motion.div
@@ -178,7 +178,7 @@ export default function CateComponent2() {
                   scale: 0.98,
                   transition: { duration: 0.1 },
                 }}
-                className="group relative flex flex-col items-center justify-center p-2 bg-white
+                className="group relative flex flex-col items-center justify-center p-3 sm:p-2 bg-white
           cursor-pointer overflow-hidden hover:shadow-lg hover:bg-[#1d3b72]"
               >
 
@@ -199,9 +199,9 @@ export default function CateComponent2() {
 
                 {/* Title from API */}
                 <motion.p
-                  className="relative z-10 text-[10px] font-medium
+                  className="relative z-10 text-[10px] sm:text-xs font-medium
            text-gray-700 group-hover:text-white transition-colors duration-300
-           text-center leading-tight max-w-full"
+           text-center leading-tight max-w-full px-1"
                   whileHover={{
                     scale: 1.01,
                     transition: {
