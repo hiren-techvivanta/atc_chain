@@ -401,7 +401,7 @@ const ProductCom = () => {
         axios.get(
           `${
             import.meta.env.VITE_BACKEND_URL
-          }/product/product/search?search=&category_id=${categoryId}`,
+          }/product/product/search?search=&category_id=${categoryId}&limit=1000`,
           getAxiosConfig()
         ),
       ]);
@@ -851,7 +851,7 @@ const ProductCom = () => {
 
       let url = `${
         import.meta.env.VITE_BACKEND_URL
-      }/product/product/search?search=${encodeURIComponent(query)}`;
+      }/product/product/search?search=${encodeURIComponent(query)}&limit=1000`;
 
       if (!query) {
         if (categoryId) {
