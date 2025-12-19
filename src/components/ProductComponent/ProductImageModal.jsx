@@ -11,6 +11,8 @@ const ProductImageModal = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [scale, setScale] = useState(1);
+  const [lastScale, setLastScale] = useState(1);
+  const [startDistance, setStartDistance] = useState(null);
 
   const [constraints, setConstraints] = useState({ top: 0, left: 0, right: 0, bottom: 0 });
   const containerRef = useRef(null);
@@ -22,15 +24,6 @@ const ProductImageModal = ({
       const containerRect = containerRef.current.getBoundingClientRect();
       const imageRect = imageRef.current.getBoundingClientRect();
 
-      // We need the unscaled dimensions of the image in the DOM
-      // But getBoundingClientRect gives scaled if transform is applied.
-      // However, framer motion handles dragConstraints on the element's layout projection usually.
-      // A safer way for manual calculation:
-      // The amount we can drag X is (ScaledWidth - ContainerWidth) / 2
-      
-      // If we use the raw values from DOM, they include the scale transform if active.
-      // Let's assume the image is centered.
-      
       const pWidth = containerRect.width;
       const pHeight = containerRect.height;
       // Get natural dimensions rendered (approximate from rect / scale)
@@ -60,6 +53,7 @@ const ProductImageModal = ({
     if (isOpen) {
       setCurrentIndex(initialIndex);
       setScale(1); // Reset zoom when opening
+      setLastScale(1);
     }
   }, [isOpen, initialIndex]);
 
@@ -68,40 +62,84 @@ const ProductImageModal = ({
     e.stopPropagation();
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     setScale(1); // Reset zoom on slide change
+    setLastScale(1);
   };
 
   const handlePrev = (e) => {
     e.stopPropagation();
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     setScale(1);
+    setLastScale(1);
   };
 
   // Handle Zoom
   const handleZoomIn = (e) => {
     e.stopPropagation();
-    setScale((prev) => Math.min(prev + 0.5, 4));
+    const newScale = Math.min(scale + 0.5, 4);
+    setScale(newScale);
+    setLastScale(newScale);
   };
 
   const handleZoomOut = (e) => {
     e.stopPropagation();
-    setScale((prev) => Math.max(prev - 0.5, 1));
+    const newScale = Math.max(scale - 0.5, 1);
+    setScale(newScale);
+    setLastScale(newScale);
   };
 
   const handleResetZoom = (e) => {
     e.stopPropagation();
     setScale(1);
+    setLastScale(1);
   };
+
+  // Helper to calculate distance between two touches
+  const getDistance = (touches) => {
+    return Math.hypot(
+      touches[0].clientX - touches[1].clientX,
+      touches[0].clientY - touches[1].clientY
+    );
+  };
+
+  const onTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      e.stopPropagation(); // prevent default browser pinch
+      const distance = getDistance(e.touches);
+      setStartDistance(distance);
+    }
+  };
+
+  const onTouchMove = (e) => {
+    if (e.touches.length === 2 && startDistance) {
+        e.stopPropagation();
+        e.preventDefault(); // Important to prevent browser default zooming
+        
+        const currentDistance = getDistance(e.touches);
+        // Calculate new scale based on ratio * last committed scale
+        const scaleChange = currentDistance / startDistance;
+        const newScale = Math.min(Math.max(lastScale * scaleChange, 1), 4);
+        
+        setScale(newScale);
+    }
+  };
+
+  const onTouchEnd = (e) => {
+    // When fingers are lifted, commit the current scale
+    if (e.touches.length < 2) {
+        setLastScale(scale);
+        setStartDistance(null);
+    }
+  };
+
 
   // Handle Wheel Zoom
   const handleWheel = (e) => {
-    if (e.ctrlKey || e.metaKey) { // Optional: require ctrl key to avoid accidental zooming while scrolling
-        // Allow default behavior or implement special logic? 
-        // Typically modals consume wheel events.
-        // Let's implement simple wheel zoom
+    if (e.ctrlKey || e.metaKey) { 
         e.preventDefault();
         const delta = e.deltaY * -0.001; 
         const newScale = Math.min(Math.max(scale + delta, 1), 4);
         setScale(newScale);
+        setLastScale(newScale); // update commit on wheel too
     }
   };
 
@@ -117,7 +155,6 @@ const ProductImageModal = ({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm"
-
         >
             
           <div className="absolute top-4 right-4 z-[60]">
@@ -130,8 +167,8 @@ const ProductImageModal = ({
             </button>
           </div>
             
-          {/* Controls Container - Bottom Center */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-4">
+          {/* Controls Container - Top Center */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-4">
              {/* Zoom Controls */}
              <div className="flex items-center bg-black/50 rounded-full px-2 py-1 backdrop-blur-md border border-white/10 shadow-lg">
                 <button
@@ -164,11 +201,7 @@ const ProductImageModal = ({
              </div>
 
              {/* Image Counter */}
-             <div className="bg-black/50 px-3 py-1 rounded-full border border-white/10">
-                <span className="text-white text-sm font-medium">
-                  {currentIndex + 1} / {images.length}
-                </span>
-             </div>
+           
           </div>
 
 
@@ -199,6 +232,10 @@ const ProductImageModal = ({
                  // Simple scroll zoom
                  e.stopPropagation();
             }}
+             // Attach touch handlers to the container to capture gestures anywhere on screen
+             onTouchStart={onTouchStart}
+             onTouchMove={onTouchMove}
+             onTouchEnd={onTouchEnd}
           >
             <motion.img
               ref={imageRef}
@@ -226,7 +263,9 @@ const ProductImageModal = ({
               // Tap to toggle zoom for better UX
               onDoubleClick={(e) => {
                   e.stopPropagation();
-                  setScale(prev => prev > 1 ? 1 : 2);
+                  const newScale = scale > 1 ? 1 : 2;
+                  setScale(newScale);
+                  setLastScale(newScale);
               }}
               
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking image
