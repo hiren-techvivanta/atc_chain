@@ -75,7 +75,7 @@ const ProductImageModal = ({
   // Handle Zoom
   const handleZoomIn = (e) => {
     e.stopPropagation();
-    const newScale = Math.min(scale + 0.5, 4);
+    const newScale = Math.min(scale + 0.5, 10);
     setScale(newScale);
     setLastScale(newScale);
   };
@@ -117,7 +117,7 @@ const ProductImageModal = ({
         const currentDistance = getDistance(e.touches);
         // Calculate new scale based on ratio * last committed scale
         const scaleChange = currentDistance / startDistance;
-        const newScale = Math.min(Math.max(lastScale * scaleChange, 1), 4);
+        const newScale = Math.min(Math.max(lastScale * scaleChange, 1), 10);
         
         setScale(newScale);
     }
@@ -137,7 +137,7 @@ const ProductImageModal = ({
     if (e.ctrlKey || e.metaKey) { 
         e.preventDefault();
         const delta = e.deltaY * -0.001; 
-        const newScale = Math.min(Math.max(scale + delta, 1), 4);
+        const newScale = Math.min(Math.max(scale + delta, 1), 10);
         setScale(newScale);
         setLastScale(newScale); // update commit on wheel too
     }
@@ -184,7 +184,7 @@ const ProductImageModal = ({
                 </span>
                 <button
                     onClick={handleZoomIn}
-                    disabled={scale >= 4}
+                    disabled={scale >= 10}
                     className="p-2 text-white hover:text-blue-300 disabled:opacity-30 transition-colors"
                     title="Zoom In"
                 >
