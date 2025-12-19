@@ -381,7 +381,6 @@ const ProductCom = () => {
     }-${params.product || ""}`;
 
     if (currentUrlParams !== newUrlParamsFormatted) {
-      lastUrlParamsRef.current = newUrlParamsFormatted;
       setSearchParams(newSearchParams);
     }
   };
@@ -487,7 +486,7 @@ const ProductCom = () => {
         const isFromMenu = searchParams.get("source") === "menu";
         
         // Allow navigation if we are in 'first' view, 'products' view, 'details' view, or if the navigation came from the menu
-        const shouldNavigate = viewMode === "first" || viewMode === "products" || viewMode === "details" || isFromMenu;
+        const shouldNavigate = viewMode === "first" || viewMode === "products" || viewMode === "details" || viewMode === "categories" || isFromMenu;
 
         if (filters.product && shouldNavigate) {
           setSelectedProductId(filters.product);
@@ -533,13 +532,16 @@ const ProductCom = () => {
   ) => {
     try {
       setProductDetailsLoading(true);
+      // Immediate UI feedback on URL detection
+      setViewMode("details");
+      setShowDetails(true);
+      setSelectedProduct(null);
 
       const detailedProduct = await fetchProductDetails(productId);
 
       if (detailedProduct) {
         setSelectedProduct(detailedProduct);
-        setViewMode("details");
-        setShowDetails(true);
+        // viewMode and showDetails already set
 
         const targetSubcategoryId = subcategoryId || detailedProduct.subcategoryId;
 
@@ -664,48 +666,34 @@ const ProductCom = () => {
           }
       }
       
-      const fetchedProducts = await searchProducts(
-        "",
-        subcategory.category_id,
-        subcategory.id
-      );
-      setProducts(fetchedProducts);
-
       updateUrlParams({
         category: subcategory.category_id,
         subcategory: subcategory.id,
       });
     } catch (error) {
-      setProducts([]);
-    } finally {
+      console.error("Error in subcategory navigation:", error);
       setProductsLoading(false);
     }
   };
 
-  const handleDirectProductClick = async (product) => {
+  const handleDirectProductClick = (product) => {
+    // Avoid reloading if already on the same product
+    if (selectedProductId === product.id) return;
+
     try {
-      const detailedProduct = await fetchProductDetails(product.id);
+      // Just update URL, let useEffect handle the view switch
+      const urlParams = {
+        category: product.categoryId,
+        product: product.id,
+      };
 
-      if (detailedProduct) {
-        setSelectedProduct(detailedProduct);
-        setSelectedProductId(product.id);
-        setSelectedSubcategoryId(null);
-        setViewMode("details");
-        setShowDetails(true);
-
-        const urlParams = {
-          category: detailedProduct.categoryId,
-          product: detailedProduct.id,
-        };
-
-        if (detailedProduct.subcategoryId) {
-          urlParams.subcategory = detailedProduct.subcategoryId;
-        }
-
-        updateUrlParams(urlParams);
+      if (product.subcategoryId) {
+        urlParams.subcategory = product.subcategoryId;
       }
+
+      updateUrlParams(urlParams);
     } catch (error) {
-      setError("Error loading product details");
+      console.error("Error in navigation:", error);
     }
   };
 
@@ -1025,25 +1013,18 @@ const ProductCom = () => {
     setCategoryName();
     setSubCategoryName();
     setSelectedProduct();
+
+    // Avoid reloading if already on the same product (if we have an ID)
+    if (productData?.productId && selectedProductId === productData.productId) return;
+
     try {
       setProductDetailsLoading(true);
-
+      
       if (productData?.productId) {
-        const detailedProduct = await fetchProductDetails(
-          productData.productId
-        );
-
-        if (detailedProduct) {
-          setSelectedProduct(detailedProduct);
-          setSelectedProductId(productData.productId);
-          setSelectedSubcategoryId(productData.subcategoryId || null);
-          setViewMode("details");
-          setShowDetails(true);
-          setParentCategory(category);
-
+          // Just update URL, let useEffect handle the view switch
           const urlParams = {
             category: productData.categoryId,
-            product: detailedProduct.id,
+            product: productData.productId,
           };
 
           if (productData.subcategoryId) {
@@ -1051,11 +1032,12 @@ const ProductCom = () => {
           }
 
           updateUrlParams(urlParams);
-        }
-        return;
+          return;
       }
 
-      setProductsLoading(true);
+      // Legacy fallback: Search by title if no ID provided
+      // Keep this as is or refactor if needed, but for now assuming ID is mostly present.
+      setProductsLoading(true); 
 
       const categoryObj = categories.find(
         (cat) => cat.category === category || cat.title === category
@@ -1069,64 +1051,44 @@ const ProductCom = () => {
         const product = searchResults.find((p) => p.title === productTitle);
 
         if (product) {
-          const detailedProduct = await fetchProductDetails(product.id);
-
-          if (detailedProduct) {
-            setSelectedProduct(detailedProduct);
-            setSelectedProductId(product.id);
-            setSelectedSubcategoryId(detailedProduct.subcategoryId || null);
-            setViewMode("details");
-            setShowDetails(true);
-            setParentCategory(category);
-
+            // Apply new logic: Update URL instead of fetching details directly
             const urlParams = {
-              category: detailedProduct.categoryId,
-              product: detailedProduct.id,
+              category: product.categoryId,
+              product: product.id,
             };
 
-            if (detailedProduct.subcategoryId) {
-              urlParams.subcategory = detailedProduct.subcategoryId;
+            if (product.subcategoryId) {
+              urlParams.subcategory = product.subcategoryId;
             }
 
             updateUrlParams(urlParams);
-          }
         }
       }
     } catch (error) {
       setError("Error loading product details");
-    } finally {
-      setProductsLoading(false);
       setProductDetailsLoading(false);
-    }
+      setProductsLoading(false);
+    } 
   };
 
-  const handleProductClick = async (product) => {
+  const handleProductClick = (product) => {
+    // Avoid reloading if already on the same product
+    if (selectedProductId === product.id) return;
+
     try {
-      setProductDetailsLoading(true);
-      const detailedProduct = await fetchProductDetails(product.id);
+      // Just update URL, let useEffect handle the view switch
+      const urlParams = {
+        category: product.categoryId,
+        product: product.id,
+      };
 
-      if (detailedProduct) {
-        setSelectedProduct(detailedProduct);
-        setSelectedProductId(product.id);
-        setSelectedSubcategoryId(detailedProduct.subcategoryId || null);
-        setViewMode("details");
-        setShowDetails(true);
-
-        const urlParams = {
-          category: detailedProduct.categoryId,
-          product: detailedProduct.id,
-        };
-
-        if (detailedProduct.subcategoryId) {
-          urlParams.subcategory = detailedProduct.subcategoryId;
-        }
-
-        updateUrlParams(urlParams);
+      if (product.subcategoryId) {
+        urlParams.subcategory = product.subcategoryId;
       }
+
+      updateUrlParams(urlParams);
     } catch (error) {
-      setError("Error loading product details");
-    } finally {
-      setProductDetailsLoading(false);
+       console.error("Error in product click:", error);
     }
   };
 
@@ -1902,7 +1864,6 @@ const ProductCom = () => {
                                     onClick={() => {
                                       handleDirectProductClick(product);
                                       setSubCategoryName();
-                                      setdetailsShowing(true);
                                     }}
                                     className="flex flex-col items-start cursor-pointer p-4"
                                   >
