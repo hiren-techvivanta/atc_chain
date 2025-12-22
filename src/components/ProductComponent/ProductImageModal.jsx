@@ -255,7 +255,7 @@ const ProductImageModal = ({
               drag={scale > 1}
               dragConstraints={constraints}
               dragElastic={0.7}
-              dragMomentum={true}
+              dragMomentum={false}
               
               // Smooth transitions for scale changes
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
