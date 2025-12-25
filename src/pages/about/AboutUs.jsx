@@ -45,7 +45,17 @@ const statsData = [
   { number: "120+", label: "Clients" },
   { number: "99%", label: "Satisfaction Rate" },
 ];
-
+const quickScale = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
+};
 const timelineData = {
   2015: {
     title: "The Beginning of a Vision",
@@ -67,17 +77,17 @@ const timelineData = {
     description:
       "Achieved pan-India recognition for product quality and reliability. Successfully replaced several international brands with Make in India products. Increased in-house production to over 700 unique products, meeting diverse industrial needs.",
   },
-   2023: {
+  2023: {
     title: "Global Reach and Recognition",
     description:
       "Expanded internationally with a strong presence across Africa, the UAE, and other global markets. Earned global respect for delivering world-class quality at competitive pricing. Strengthened export operations, establishing ATC Chains India as a recognized global manufacturer.",
   },
-   2024: {
+  2024: {
     title: "Expanding Product Portfolio",
     description:
       "Represented ATC Chains India on the global stage through exhibitions and partnerships. Operated two advanced manufacturing facilities serving both domestic and international clients. Increased production capacity to 1,500 products, all manufactured 100% in-house.",
   },
-   2025: {
+  2025: {
     title: "Leading the Future",
     description:
       "Established a new state-of-the-art facility to bridge the growing gap between supply and demand. Continuing to lead toward becoming India’s largest and most trusted industrial chain manufacturer. Focusing on automation, sustainability, and continuous innovation to drive the next decade of growth. Vision Ahead To be India’s leading global manufacturer of industrial chains – delivering innovation, excellence, and reliability to industries worldwide.",
@@ -998,43 +1008,73 @@ const AboutUs = () => {
 
       {/* Partners Section */}
       <motion.div
-        className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20 py-16 sm:py-20"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
+        className="our-client-section fade-in-section py-15"
+        variants={quickScale}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
       >
-        <div className="overflow-hidden">
-          <div className="flex">
-            {[1, 2].map((set) => (
-              <motion.div
-                key={set}
-                initial={{ x: "0%" }}
-                animate={{ x: "-100%" }}
-                transition={{
-                  duration: 30,
-                  repeat: Infinity,
-                  ease: "linear",
-                  repeatType: "loop",
-                }}
-                className="flex flex-shrink-0 items-center"
-              >
-                {partners.map((partner) => (
-                  <motion.div
-                    key={`${set}-${partner.id}`}
-                    className="flex-shrink-0 mx-12 px-0 md:px-5"
-                  >
-                    <img
-                      src={partner.image}
-                      alt={partner.name}
-                      className="h-12 sm:h-16 lg:h-20 object-contain opacity-60 hover:opacity-100 transition-all duration-200 filter grayscale hover:grayscale-0"
-                      style={{ maxWidth: `${partner.width}px` }}
-                    />
-                  </motion.div>
-                ))}
-              </motion.div>
-            ))}
-          </div>
+        <div className="">
+          {/* <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mb-12 px-14 mx-auto container"
+          >
+            <motion.h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center md:text-start">
+              <span className="text-[#2E437C]">
+                <CustomHeading title="Our" className="" />
+              </span>
+              <span className="text-[#BABEC8]">
+                <CustomHeading title="Clients" className="" />
+              </span>
+            </motion.h2>
+          </motion.div> */}
+
+          <motion.div
+            className="overflow-hidden"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex">
+              {[1, 2].map((set) => (
+                <motion.div
+                  key={set}
+                  initial={{ x: "0%" }}
+                  animate={{ x: "-100%" }}
+                  transition={{
+                    duration: 25,
+                    repeat: Infinity,
+                    ease: "linear",
+                    repeatType: "loop",
+                  }}
+                  className="flex flex-shrink-0 items-center  "
+                >
+                  {partners.map((partner) => (
+                    <motion.div
+                      key={`${set}-${partner.id}`}
+                      className="flex-shrink-0 mx-15 px-0 md:px-5"
+                      whileHover={{
+                        scale: 1.05,
+
+                        transition: { duration: 0.1 },
+                      }}
+                    >
+                      <img
+                        src={partner.image}
+                        alt={partner.name}
+                        className="h-12 sm:h-16 lg:h-20 object-contain transition-all duration-150"
+                        style={{ maxWidth: `${partner.width}px` }}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </motion.div>
     </div>

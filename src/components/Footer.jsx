@@ -9,6 +9,7 @@ import {
   FiYoutube,
 } from "react-icons/fi";
 import { RiTwitterXFill } from "react-icons/ri";
+import TechVivantaLogo from "../assets/images/Techvivantalogo.png";
 import Logo from "../assets/images/logo-white.png";
 
 export default function Footer() {
@@ -131,6 +132,7 @@ export default function Footer() {
           {/* Right - Contact Info */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Contact Info</h3>
+
             <ul className="space-y-3 text-[#DBEAFE] text-sm">
               <li className="flex items-center gap-3">
                 <FiMail className="text-lg" />
@@ -141,6 +143,7 @@ export default function Footer() {
                   sales@atcchain.com
                 </a>
               </li>
+
               <li className="flex items-center gap-3">
                 <FiPhone className="text-lg" />
                 <div className="flex flex-col">
@@ -152,14 +155,35 @@ export default function Footer() {
                   </a>
                 </div>
               </li>
+
               <li className="flex items-start gap-3">
                 <FiMapPin className="text-white text-lg mt-1" />
                 <p>
                   22, Kalyannagar Society, O/s Shahpur Gate, Shahpur, Ahmedabad
-                  - 380004
+                  – 380004
                 </p>
               </li>
             </ul>
+
+            {/* Divider */}
+            <div className="border-t border-white/20 my-4"></div>
+
+            {/* TechVivanta Credit */}
+            <a
+              href="https://techvivanta.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-2 text-md text-[#DBEAFE] hover:text-white transition"
+            >
+              <span>Designed & Developed by</span>
+
+              <img
+                src={TechVivantaLogo}
+                alt="TechVivanta"
+                className="h-7 w-auto opacity-80 
+               group-hover:opacity-100 transition"
+              />
+            </a>
           </div>
         </motion.div>
 
@@ -173,15 +197,17 @@ export default function Footer() {
         />
 
         {/* Bottom Text */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-center text-gray-300 text-sm"
-        >
-          © 2025 ATC Chains. All rights reserved.
-        </motion.p>
+        <div className="flex justify-center">
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-wrap items-center justify-center gap-2 text-gray-300 text-sm text-center"
+          >
+            <span>© 2025 ATC Chains. All rights reserved.</span>
+          </motion.p>
+        </div>
       </div>
     </footer>
   );
