@@ -166,24 +166,7 @@ export default function Footer() {
             </ul>
 
             {/* Divider */}
-            <div className="border-t border-white/20 my-4"></div>
-
-            {/* TechVivanta Credit */}
-            <a
-              href="https://techvivanta.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-md text-[#DBEAFE] hover:text-white transition"
-            >
-              <span>Designed & Developed by</span>
-
-              <img
-                src={TechVivantaLogo}
-                alt="TechVivanta"
-                className="h-7 w-auto opacity-80 
-               group-hover:opacity-100 transition"
-              />
-            </a>
+           
           </div>
         </motion.div>
 
