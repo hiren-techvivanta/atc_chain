@@ -440,12 +440,12 @@ export default function Home() {
 
               {/* 2. The Heading - Green Brand Highlight */}
               <h2 className="text-4xl md:text-5xl font-bold leading-[1.1] mb-6 text-white">
-                Designed & Developed by <br />
-                <span className="text-[#2AA952]">Techvivanta</span>
+                Designed & Developed by 
+                <span className="text-[#2AA952]"> Techvivanta</span>
               </h2>
 
               {/* 3. The Paragraph */}
-              <p className="text-lg text-gray-400 leading-relaxed mb-10 max-w-xl">
+              <p className="text-lg text-gray-400 leading-relaxed mb-10 max-w-xl hidden md:block">
                 We proudly partnered with{" "}
                 <span onClick={() => window.open('https://www.techvivanta.com/', '_blank')} className="font-bold text-white border-b-2 border-[#2AA952]/30 pb-0.5">
                   Techvivanta
@@ -499,7 +499,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-[#2AA952] rounded-[2.5rem] blur-2xl opacity-10"></div>
 
               {/* The Card Container */}
-              <div className="relative bg-[#0A0A0A] rounded-[1.5rem] p-12 md:p-2 flex items-center justify-center border border-white/10 shadow-2xl">
+              <div className="relative bg-[#0A0A0A] rounded-[1.5rem] p-1 md:p-2 flex items-center justify-center border border-white/10 shadow-2xl">
                 <div className="flex items-center gap-4">
                   <img
                     src={TechVivantaLogo}
