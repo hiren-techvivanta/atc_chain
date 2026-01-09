@@ -420,7 +420,7 @@ export default function Home() {
           ></iframe>
         </motion.div>
       </section>
-      <section className="py-20 bg-black overflow-hidden">
+      <section className="py-5 bg-black overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* LEFT SIDE: Content */}
@@ -429,62 +429,17 @@ export default function Home() {
               whileInView="visible"
               viewport={{ once: true }}
               variants={fadeInUp}
+              className="hidden lg:block"
             >
-              {/* 1. The Badge - Green Dot Accent */}
-              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
-                <span className="w-2 h-2 rounded-full bg-[#2AA952] shadow-[0_0_8px_#2AA952]"></span>
-                <span className="text-[11px] font-bold tracking-widest text-gray-300 uppercase">
-                  Strategic Development Partner
-                </span>
-              </div>
+           
 
               {/* 2. The Heading - Green Brand Highlight */}
-              <h2 className="text-4xl md:text-5xl font-bold leading-[1.1] mb-6 text-white">
+              <h2 className="text-4xl md:text-5xl font-bold leading-[1.1] mb-6 text-white ">
                 Designed & Developed by 
                 <span className="text-[#2AA952]"> Techvivanta</span>
               </h2>
-
-              {/* 3. The Paragraph */}
-              <p className="text-lg text-gray-400 leading-relaxed mb-10 max-w-xl hidden md:block">
-                We proudly partnered with{" "}
-                <span onClick={() => window.open('https://www.techvivanta.com/', '_blank')} className="font-bold text-white border-b-2 border-[#2AA952]/30 pb-0.5">
-                  Techvivanta
-                </span>{" "}
-                to build our complete digital ecosystem. They designed our
-                website, developed the custom Admin Panel, and engineered the
-                secure APIs that power this platform.
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
-                {/* Feature 1: Design */}
-                <div className="group">
-                  <h4 className="font-bold text-gray-200 text-sm mb-1 group-hover:text-[#2AA952] transition-colors">
-                    Design
-                  </h4>
-                  <p className="text-[10px] uppercase tracking-wider text-gray-500 font-medium">
-                    User-Centric UI/UX
-                  </p>
-                </div>
-
-                {/* Feature 2: Develop */}
-                <div className="group">
-                  <h4 className="font-bold text-gray-200 text-sm mb-1 group-hover:text-[#2AA952] transition-colors">
-                    Develop
-                  </h4>
-                  <p className="text-[10px] uppercase tracking-wider text-gray-500 font-medium">
-                    Robust Architecture
-                  </p>
-                </div>
-
-                {/* Feature 3: Scale */}
-                <div className="group">
-                  <h4 className="font-bold text-gray-200 text-sm mb-1 group-hover:text-[#2AA952] transition-colors">
-                    Scale
-                  </h4>
-                  <p className="text-[10px] uppercase tracking-wider text-gray-500 font-medium">
-                    High Performance
-                  </p>
-                </div>
-              </div>
+          
+            
             </motion.div>
 
             {/* RIGHT SIDE: The Logo Card */}
@@ -499,12 +454,12 @@ export default function Home() {
               <div className="absolute inset-0 bg-[#2AA952] rounded-[2.5rem] blur-2xl opacity-10"></div>
 
               {/* The Card Container */}
-              <div className="relative bg-[#0A0A0A] rounded-[1.5rem] p-1 md:p-2 flex items-center justify-center border border-white/10 shadow-2xl">
+              <div className="relative  rounded-[1.5rem] p-1 md:p-2 flex items-center justify-center">
                 <div className="flex items-center gap-4">
                   <img
                     src={TechVivantaLogo}
                     alt="Techvivanta"
-                    className=" w-auto object-contain"
+                    className=" w-[100%] lg:w-[50%] object-contain mx-auto"
                   />
                 </div>
               </div>
