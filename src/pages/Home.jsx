@@ -23,7 +23,10 @@ import l5 from "../assets/images/l5.png";
 import l6 from "../assets/images/l6.png";
 import Seo from "../components/common/Seo";
 import { CustomHeading } from "../components/common/CustomHeading";
-import TechVivantaLogo from "../assets/images/Techvivantalogo.jpg";
+import TechVivantaLogo from "../assets/images/Techvivantalogo.png";
+
+import crbg from "../assets/images/crbg.png";
+import QRCode from "react-qr-code";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -420,50 +423,72 @@ export default function Home() {
           ></iframe>
         </motion.div>
       </section>
-      <section className="py-5 bg-black overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* LEFT SIDE: Content */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="hidden lg:block"
+
+      {/* cradit section */}
+      <section className="relative py-5 overflow-hidden">
+        {/* Background image */}
+        <img
+          src={crbg}
+          alt="cr bg"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        />
+
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/75 z-10"></div>
+
+        {/* Content */}
+        <div
+          className="
+      relative z-20
+      min-h-[180px]
+      flex flex-col gap-6
+      items-center text-center
+      px-4 py-6
+
+      md:flex-row md:justify-around md:items-center md:text-right
+    "
+        >
+          {/* Left logo */}
+          <img
+            src={TechVivantaLogo}
+            alt="logo"
+            className="h-14 sm:h-16 md:h-20"
+          />
+
+          {/* QR Code */}
+          <div
+            className="
+        bg-white p-2 rounded-lg
+        w-[90px] sm:w-[110px] md:w-[130px]
+      "
+          >
+            <QRCode
+              value="https://www.techvivanta.com"
+              className="w-full h-auto"
+            />
+          </div>
+
+          {/* Text content */}
+          <div className="text-white">
+            <h6 className="text-[18px] sm:text-[22px] md:text-[26px] font-[500]">
+              Designed & Developed by Tech Vivanta
+            </h6>
+
+            <p className="text-[14px] sm:text-[18px] md:text-[20px] mt-1 opacity-90">
+              UI/UX • App Development • Web Solutions
+            </p>
+
+            <p
+              className="
+          text-[14px] sm:text-[16px] md:text-[20px]
+          underline cursor-pointer mt-1 opacity-90
+        "
+              onClick={() =>
+                window.open("https://www.techvivanta.com", "_blank")
+              }
             >
-           
-
-              {/* 2. The Heading - Green Brand Highlight */}
-              <h2 className="text-4xl md:text-5xl font-bold leading-[1.1] mb-6 text-white ">
-                Designed & Developed by 
-                <span className="text-[#2AA952]"> Techvivanta</span>
-              </h2>
-          
-            
-            </motion.div>
-
-            {/* RIGHT SIDE: The Logo Card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              {/* Green Glow Effect Behind Card */}
-              <div className="absolute inset-0 bg-[#2AA952] rounded-[2.5rem] blur-2xl opacity-10"></div>
-
-              {/* The Card Container */}
-              <div className="relative  rounded-[1.5rem] p-1 md:p-2 flex items-center justify-center">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={TechVivantaLogo}
-                    alt="Techvivanta"
-                    className=" w-[100%] lg:w-[50%] object-contain mx-auto"
-                  />
-                </div>
-              </div>
-            </motion.div>
+              www.techvivanta.com
+            </p>
           </div>
         </div>
       </section>

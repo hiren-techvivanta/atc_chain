@@ -388,3 +388,8 @@
   color: #2E437C;
   font-weight: bold;
 }
+
+.cr {
+  background-image: url(./assets/images/crbg.png);
+  filter: brightness(0.4);
+}
